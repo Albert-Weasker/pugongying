@@ -1,0 +1,75 @@
+// Prisma Schema for 蒲公英 (Pugongying)
+// 一次性消息系统：每一句话只存在一次，被看见就是它的结束
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 风里的话（核心表）
+// 每一句话只要被"某一个人看见"，就从风中消失
+model WindMessage {
+  id          String    @id @default(uuid())
+  content     String    @db.Text
+  
+  // 消息类型
+  type        MessageType @default(ORIGIN)
+  
+  // 可见性状态（是否仍在风中）
+  isVisible   Boolean   @default(true) @map("is_visible")
+  
+  // 被风消耗的时间（第一次被看到）
+  consumedAt  DateTime? @map("consumed_at")
+  
+  createdAt   DateTime  @default(now()) @map("created_at")
+  
+  // 关联关系
+  views       SessionView[]
+  
+  @@index([isVisible])
+  @@index([consumedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("wind_messages")
+}
+
+enum MessageType {
+  ORIGIN  // 用户最初写的
+  REPLY   // "给世界一个拥抱"写的
+}
+
+// 匿名会话（当前用户）
+// 不需要用户表，只需要知道"当前是谁"
+model Session {
+  id          String    @id @default(uuid())
+  
+  createdAt   DateTime  @default(now()) @map("created_at")
+  lastActivity DateTime @updatedAt @map("last_activity")
+  
+  // 关联关系
+  views       SessionView[]
+  
+  @@map("sessions")
+}
+
+// 会话查看记录（页面监控当前用户看到的话）
+// 解决：1. 当前用户不会再看到这句话 2. 防止刷新刷到同一句
+model SessionView {
+  sessionId   String    @map("session_id")
+  messageId   String    @map("message_id")
+  
+  viewedAt    DateTime  @default(now()) @map("viewed_at")
+  
+  // 关联关系
+  session     Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  message     WindMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  
+  @@id([sessionId, messageId])
+  @@index([sessionId])
+  @@index([messageId])
+  @@index([viewedAt])
+  @@map("session_views")
+}

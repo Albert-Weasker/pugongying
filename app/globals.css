@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    /* 防止横向滚动 */
+    box-sizing: border-box;
+  }
+  
+  html {
+    /* 防止横向滚动 */
+    overflow-x: hidden;
+    /* 平滑滚动 */
+    scroll-behavior: smooth;
+    /* 适配安全区域（iPhone 刘海屏等） */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  
+  body {
+    @apply bg-background text-gray-900 antialiased;
+    /* 防止横向滚动 */
+    overflow-x: hidden;
+    /* 适配安全区域 */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    /* 最小高度确保内容可见 */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
