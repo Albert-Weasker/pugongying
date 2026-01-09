@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import GoogleAnalytics from './components/GoogleAnalytics'
+import CloudflareAnalytics from './components/CloudflareAnalytics'
 
 export const metadata: Metadata = {
   title: '蒲公英｜匿名写下一句话的地方',
@@ -33,6 +34,7 @@ export default function RootLayout({
       </head>
       <body>
         <GoogleAnalytics />
+        <CloudflareAnalytics />
         {children}
       </body>
     </html>
