@@ -25,6 +25,7 @@ export const translations = {
       nextWind: "· Next wind",
       listenWind: "· Listen to the wind",
       stopWind: "· Stop listening for now",
+      prompt: "These words drift through the wind, carrying thoughts from somewhere unknown.",
     },
     response: {
       allowSeen: "Allow wind to see",
@@ -64,6 +65,7 @@ export const translations = {
       nextWind: "· 下一阵风",
       listenWind: "· 听一阵风",
       stopWind: "· 过一会再听风",
+      prompt: "这些话从风中飘来，带着来自未知地方的思绪。",
     },
     response: {
       allowSeen: "允许被风看见",
